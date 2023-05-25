@@ -17,3 +17,11 @@ heros_df = pd.json_normalize(json_data)
 for column in heros_df:
     current = heros_df[column]
     for row in current:
+        if isinstance(row, list):
+            print(column, row)
+            try:
+                df3 = pd.DataFrame(heros_df[column].to_list(), columns=[column+str(i) for i in range(len(row))])
+                print(df3)
+            except:
+                pass
+        break
