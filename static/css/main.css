@@ -1,0 +1,30 @@
+.data {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.data th, .data td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+
+.tooltip {
+        position: absolute;
+        padding: 5px;
+        background-color: white;
+        border: 1px solid black;
+        pointer-events: none;
+      }
+
+.country{
+    fill: rgba(235, 235, 235, 1);
+    stroke: rgba(216, 216, 216, 1);
+    stroke-width: 0.4;
+}
+
+path {
+fill: none;
+stroke: black;
+}

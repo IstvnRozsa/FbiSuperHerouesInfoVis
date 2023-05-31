@@ -1,77 +1,67 @@
+from geopy.geocoders import Nominatim
 import pandas as pd
+import pycountry
 import json
 
-# Example JSON data
-data = '''
-[
-    {
-        "id": 1,
-        "name": "John Doe",
-        "languages": [
-            {
-                "name": "Python",
-                "experience": "Intermediate"
-            },
-            {
-                "name": "Java",
-                "experience": "Advanced"
-            }
-        ],
-        "skills": ["Data Analysis", "Machine Learning", "Web Development"]
-    },
-    {
-        "id": 2,
-        "name": "Jane Smith",
-        "languages": [
-            {
-                "name": "JavaScript",
-                "experience": "Intermediate"
-            },
-            {
-                "name": "C++",
-                "experience": "Beginner"
-            }
-        ],
-        "skills": ["Data Science", "Data Visualization"]
-    },
-    {
-        "id": 3,
-        "name": "Alice Brown",
-        "languages": [
-            {
-                "name": "Python",
-                "experience": "Advanced"
-            },
-            {
-                "name": "JavaScript",
-                "experience": "Intermediate"
-            }
-        ]
-    }
-]
-'''
+cities = pd.read_csv('static/data/criminals_cities.csv')
 
-# Load JSON data into a Python list
-json_data = json.loads(data)
+# Geocoding service (Nominatim in this example)
+# geolocator = Nominatim(user_agent="city_country_lookup")
+geolocator = Nominatim(user_agent="city_to_country")
 
-# Normalize the JSON data (including skills and languages)
-df = pd.json_normalize(json_data,
-                       record_path=['languages'],
-                       meta=['id', 'name'],
-                       meta_prefix='person_',
-                       record_prefix='language_')
+country_names = []
+country_codes_a2 = []
+country_codes_a3 = []
+city_names = []
+latitudes = []
+longitudes = []
 
-# Check if 'person_skills' column exists in the DataFrame
-if 'person_skills' in df.columns:
-    # Separate the skills into different columns
-    df = df.join(pd.DataFrame(df.pop('person_skills').tolist()).add_prefix('skill_'))
 
-# Check if 'language_name' column exists in the DataFrame
-if 'language_name' in df.columns:
-    # Separate the languages into different columns
-    df = df.join(pd.DataFrame(df.pop('language_name').tolist()).add_prefix('language_'))
-    df['language_experience'] = df['language_experience'].apply(lambda x: [i.get('experience') for i in x])
-    df = df.join(pd.DataFrame(df.pop('language_experience').tolist()).add_prefix('language_experience'))
+# Iterate over each city
+for city in cities.itertuples():
+    location = geolocator.geocode(city.place_of_birth, exactly_one=True, addressdetails=True)
 
-# Print the resulting DataFrame
-print(df)
+
+    if location is not None:
+        country_code_a2 = location.raw['address'].get('country_code')
+        if ',' in city.place_of_birth:
+            city_name = city.place_of_birth.split(",")[0]
+        else:
+            city_name = None
+        latitude = location.latitude
+        longitude = location.longitude
+
+        country = pycountry.countries.get(alpha_2=country_code_a2)
+        if country is not None:
+            country_code_a3 = country.alpha_3
+            country_name = country.name
+        else:
+            country_code_a3 = None
+            country_name = None
+
+        country_names.append(country_name)
+        country_codes_a2.append(country_code_a2)
+        country_codes_a3.append(country_code_a3)
+        city_names.append(city_name)
+        latitudes.append(latitude)
+        longitudes.append(longitude)
+
+        print(f"The city {city_name} is in {country_name} ({country_code_a3}).")
+    else:
+        #print(f"The city {city.place_of_birth} was not found.")
+        country_names.append(None)
+        country_codes_a2.append(None)
+        country_codes_a3.append(None)
+        city_names.append(None)
+        latitudes.append(None)
+        longitudes.append(None)
+
+cities["country_names"] = country_names
+cities["country_codes_a2"] = country_codes_a2
+cities["country_codes_a3"] = country_codes_a3
+cities["city_name"] = city_names
+cities["longitude"] = longitude
+cities["latitude"] = latitude
+
+cities.to_csv('static/data/criminals_cities.csv')
+
