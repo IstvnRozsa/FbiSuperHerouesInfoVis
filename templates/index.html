@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-<script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 {% endblock %}
 
 
@@ -12,14 +12,16 @@
         <h2>Criminals</h2>
         <svg id="criminals_map"></svg>
         <svg id="criminals_barchart"></svg>
+        <svg id="wordcloud"></svg>
     </div>
 
 
-<script>
-    let criminals_json = {{ criminals | safe }};
-    let superheroes_json = {{ superheroes | safe }};
-</script>
-<script src="../static/js/maps.js" type="text/javascript"></script>
-<script src="../static/js/criminals_charts.js" type="text/javascript"></script>
+    <script>
+        let criminals_json = {{ criminals | safe }};
+        let superheroes_json = {{ superheroes | safe }};
+    </script>
+    <script src="../static/js/maps.js" type="text/javascript"></script>
+    <script src="../static/js/criminals_charts.js" type="text/javascript"></script>
+    <script src="../static/js/superheroes_charts.js" type="text/javascript"></script>
 
 {% endblock %}

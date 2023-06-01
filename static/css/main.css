@@ -11,20 +11,45 @@
 
 
 .tooltip {
-        position: absolute;
-        padding: 5px;
-        background-color: white;
-        border: 1px solid black;
-        pointer-events: none;
-      }
+    position: absolute;
+    padding: 5px;
+    background-color: white;
+    border: 1px solid black;
+    pointer-events: none;
+}
 
-.country{
+.country {
     fill: rgba(235, 235, 235, 1);
     stroke: rgba(216, 216, 216, 1);
     stroke-width: 0.4;
 }
 
 path {
-fill: none;
-stroke: black;
+    fill: none;
+    stroke: black;
 }
+
+
+.bar {
+    fill: steelblue;
+}
+
+.bar:hover {
+    fill: orange;
+}
+
+.axis-x path {
+    display: none;
+}
+
+.axis-y text {
+    font-size: 12px;
+}
+
+
+
+.word {
+      font-family: Impact, sans-serif;
+      font-size: 12px;
+      fill: steelblue;
+    }

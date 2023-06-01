@@ -1,0 +1,1 @@
+console.log(superheroes_json);
